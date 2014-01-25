@@ -1,5 +1,4 @@
 *.class
-*.yml
 *.xml
 /.idea
 /.zip
