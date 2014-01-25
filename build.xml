@@ -1,0 +1,41 @@
+<project name="jdbc-ord-mgmt" >
+    <target name="clean">
+        <delete dir="build"></delete>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="build/src"></mkdir>
+        <javac srcdir="src" destdir="build/src" debug="yes">
+        </javac>
+    </target>
+
+    <target name="test-compile" depends="compile">
+        <mkdir dir="build/test"></mkdir>
+        <javac srcdir="test" destdir="build/test"
+               classpath="build/src;external-lib/junit-4.10.jar;external-lib/mariadb-java-client-1.1.5.jar" debug="yes">
+        </javac>
+    </target>
+
+    <target name="test" depends="test-compile">
+        <junit failureproperty = "test.failed">
+            <classpath>
+                <pathelement location="build/src"/>
+                <pathelement location="build/test"/>
+                <pathelement location="external-lib/junit-4.10.jar"/>
+                <pathelement location="external-lib/mariadb-java-client-1.1.5.jar"/>
+            </classpath>
+            <batchtest>
+                <fileset dir="build/test/">
+                    <include name="**/*Test*"/>
+                </fileset>
+            </batchtest>
+            <formatter type = "brief" usefile = "false"/>
+        </junit>
+    </target>
+    <target name="exit" if="test.failed">
+        <fail message="tests failed."/>
+    </target>
+
+    <target name="run-test" depends="test,exit"/>
+
+</project>
